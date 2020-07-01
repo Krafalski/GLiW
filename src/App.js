@@ -4,8 +4,7 @@ import React from 'react'
 const letters = ' abcdefghijklmnopqrstuvwxyz'
 const words = [
   'ride',
-  'national',
-  'anthem',
+  'national anthem',
   'money',
   'summertime',
   'sadness',
@@ -21,6 +20,7 @@ const words = [
   'daddy',
   'cherry',
   'cola',
+  'cry',
   'Coachella',
   'Florida',
   'brooklyn',
@@ -40,7 +40,15 @@ const words = [
   'cool',
   'bummer',
   'mustang',
-  'beach'
+  'beach',
+  'the greatest',
+  'video games',
+  'art deco',
+  'happiness is a butterfly',
+  'lucky ones',
+  'music to watch boys to',
+  'off to the races',
+  'west coast'
 ]
 
 // game letters
@@ -48,6 +56,10 @@ class Letter {
   constructor(value) {
     this.value = value
     this.hidden = true
+    // deal with words that have spaces in them
+    if (value === ' ') {
+      this.hidden = false
+    }
   }
   show() {
     this.hidden = false
