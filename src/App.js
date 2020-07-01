@@ -100,10 +100,8 @@ class Word {
         letterFound = true
       }
     }
-    // test if we have a winner
-
-    // regardless of winner, return a value so the number of guesses can be updated correctly
-    return { letterFound, wordFullyGuessed: this.isWordFullyGuessed() }
+    // return whether the letter was found and if the word is fully guessed
+    return letterFound
   }
 }
 
@@ -161,16 +159,15 @@ class App extends React.Component {
   handleSelect = event => {
     const letterChoice = event.target.value
     // test the letter - will update the word object not best practices but ok here
-    // returns an object with true false values based on whether the letter was found in the word and whether the word is fully guessed
-    const { letterFound, wordFullyGuessed } = this.state.word.testLetter(
-      letterChoice
-    )
+    // returns true/false depending if letter was in the word
+    const playLetter = this.state.word.testLetter(letterChoice)
     // reduce the letters in play both on 'the board' and the options menu
     let newLettersLeft = this.state.lettersLeft.filter(l => l !== letterChoice)
     // set how many guesses are left based on the play, if the guess was wrong, subtract, else, do not subtract the score
-    let guessesLeft = letterFound ? 0 : -1
-    // is the game over? was the word fully guessed? Let's check
-    if (wordFullyGuessed) {
+    let guessesLeft = playLetter ? 0 : -1
+    // is the game over?
+    // first, was the word fully guessed? Let's check
+    if (this.state.word.isWordFullyGuessed()) {
       alert('you won')
       // stop new turns from happening, because person won
       newLettersLeft.length = 0
