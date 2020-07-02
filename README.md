@@ -1,68 +1,81 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Build a Game in React
 
-## Available Scripts
+## Build GLiW! The **G**uess **L**etters **i**n **W**ords Game!
 
-In the project directory, you can run:
+### Game Play Description
 
-### `yarn start`
+- Make an array of words centered around a theme (food, music, movies, the art of pickling beets, etc) - choose 2- 10 words. **ONLY** choose single words. For bonus you can do longer expressions/deal with spaces etc. But first - just get the game working fully with single words!
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- There will be a game board that on start, will chose a random word from your array that will show the number of letters, starting with all the letters hidden. When the letters are hidden, display an underscore `_`
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+So the word `hello` - would look like `_` `_` `_` `_` `_`
 
-### `yarn test`
+- The player will be able to make 6 wrong guesses. If the player guesses a correct letter, the number of guesses does not decrease.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- if the player guesses correctly, then the view will be updated. For example if the player guesses `e` - the board will look like this
 
-### `yarn build`
+like `_` `e` `_` `_` `_`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- if the player guesses a letter that is used multiple times, it will uncover every instance of that letter. For example, if the user gussed `l`:
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+`_` `e` `l` `l` `_`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- if the user is out of guesses - make an alert that displays a message that says the player lost. BONUS - add functionality to show what the word was on loss
 
-### `yarn eject`
+- if the user has correctly guessed the word - make an alert that displays a message that says the player won. BONUS - disable the dropdown menu and update the views of the board so the player cannot make any further plays and the only option is to press the start button again.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Tips
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+React should render views based on data. Try to separate the game logic from the display logic. Use the data/game logic to update the view.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Break it down to tiny solvable steps (follow your own order, this is just an example):
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- make an array of words
+- select a random word
+- console log the random word
+- get react to render the word in the browser
+- use some logic that based on whether the letter is guessed: if it is not guessed it will display `_` or if the letter is guessed then display that
+- if the guess is correct don't decrease the number of guesses
+- if the guess is incorrect decrease the number of guesses and have that show up in the browser
+- etc
 
-## Learn More
+If you are stuck, try to think of an even simpler step to do, like just trying to console log a value.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Great Usage of classes
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Write Code for You
 
-### Code Splitting
+the following classes can be really helpful for you in building out your game logic. However, if you have a different approach in mind - go for it!
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+#### Letter Class
 
-### Analyzing the Bundle Size
+##### Object Attributes
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+- value
+  - a string
+- hidden
+  - a boolean (should be set to true by default)
+- show()
+  - a function that will set hidden to false
+- display()
+  - a function that will return `_` if the letter is hidden and return the value if the letter is not hidden
 
-### Making a Progressive Web App
+#### Word Class
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+##### Object Attributes
 
-### Advanced Configuration
+- letters
+  - an array of Letter objects
+- getLetters(newWord)
+  - accepts an input argument, a string (a chosen random word from our words array) - it will split the string or the chosen word and create a new Letter object with each letter. Then it will push this new object into the letters array.
+- isWordCompletelyGuessed()
+  - a function: checks if every letter's hidden property is false, if they are all false, then the word is fully guessed. If the word is not fully guessed return false. If it is fully guessed, return true
+- testLetter(letter)
+  - a function that takes a letter that the player has chosen. If the letter matches a letter in the word in play, then change the value of the Letter objects hidden to true and return the value `true`. If the letter does not match, then return the value `false`.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+### Starter code
 
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- you are provided with starter code that:
+- **AFTER** you press start, you'll be able to choose as single letter and it will alert the letter you've chosen
+- has a starting state and startGame function that will help you get started on writing game logic, so you're not starting with a blank slate
+- if you would like to start with a a totally blank slate it's totally cool. But note, choosing a letter by clicking on it, using a keyup listener, input field - is all a bit trickier and will require more thought/logic than the drop down menu provided

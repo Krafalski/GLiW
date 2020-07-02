@@ -48,7 +48,8 @@ const words = [
   'lucky ones',
   'music to watch boys to',
   'off to the races',
-  'west coast'
+  'west coast',
+  'million dollars'
 ]
 
 // game letters
@@ -117,12 +118,12 @@ class Guesses extends React.Component {
 }
 
 // small component to show letters left to play - BONUS
-class LettersLeft extends React.Component {
+class WrongLetters extends React.Component {
   render() {
     return (
       <p>
-        {this.props.lettersLeft.map(letter => (
-          <span className="letters-left" key={letter}>
+        {this.props.wrongLetters.map(letter => (
+          <span className="wrong-letters" key={letter}>
             {letter}
           </span>
         ))}
@@ -136,6 +137,7 @@ class App extends React.Component {
   // start the game state - need otherwise errors out without componentDidMount
   state = {
     lettersLeft: [],
+    wrongLetters: [],
     guesses: 'press start game',
     playLetter: ' '
   }
@@ -148,7 +150,8 @@ class App extends React.Component {
       // creates a word object to play
       word: this.chooseWord(words),
       // the first options selection is empty space
-      letterplay: ' '
+      letterplay: ' ',
+      wrongLetters: []
     })
   }
   // choose a word to guess
@@ -161,6 +164,13 @@ class App extends React.Component {
     // test the letter - will update the word object not best practices but ok here
     // returns true/false depending if letter was in the word
     const playLetter = this.state.word.testLetter(letterChoice)
+
+    if (!playLetter) {
+      const addWrongLetter = [...this.state.wrongLetters, letterChoice].sort()
+      this.setState({
+        wrongLetters: addWrongLetter
+      })
+    }
     // reduce the letters in play both on 'the board' and the options menu
     let newLettersLeft = this.state.lettersLeft.filter(l => l !== letterChoice)
     // set how many guesses are left based on the play, if the guess was wrong, subtract, else, do not subtract the score
@@ -199,15 +209,25 @@ class App extends React.Component {
         <h1>The Guess Letters in Words Game (GLiW Game)</h1>
         <button onClick={this.startGame}>Start Game!</button>
         <Guesses guesses={this.state.guesses} />
-        <LettersLeft lettersLeft={this.state.lettersLeft} />
-        <label>Play a letter!</label>
-        <select value={this.state.letterPlay} onChange={this.handleSelect}>
-          {this.state.lettersLeft.map((letter, index) => (
-            <option key={index} value={letter}>
-              {letter}
-            </option>
-          ))}
-        </select>
+        <WrongLetters wrongLetters={this.state.wrongLetters} />
+        <div>
+          {this.state.lettersLeft.length !== 0 ? (
+            <>
+              <label>Play a letter!</label>
+              <select
+                value={this.state.letterPlay}
+                onChange={this.handleSelect}
+              >
+                {this.state.lettersLeft.map((letter, index) => (
+                  <option key={index} value={letter}>
+                    {letter}
+                  </option>
+                ))}
+              </select>
+            </>
+          ) : null}
+        </div>
+
         <div>
           <p>
             {this.state.word
